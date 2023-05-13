@@ -132,3 +132,4 @@ dmypy.json
 # ignore images folder
 extracted_files/
 Warp-C/
+augmented_images/
