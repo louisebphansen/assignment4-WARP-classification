@@ -32,9 +32,7 @@ import data as dt
 def argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, help = "how many epochs the model should run for")
-    #parser.add_argument("--classes", type=int, help= "number of classes in the data")
-    #parser.add_argument("--out_folder", help="where to save the output classification report")
-    parser.add_argument("--balanced", type=bool, help = "whether to balance the unequal number of samples in each class or not")
+    parser.add_argument("--balance", help = "whether to balance the unequal number of samples in each class or not")
     parser.add_argument("--augmentation_level", help = "must be none, low or high")
     args = vars(parser.parse_args())
     
@@ -123,7 +121,7 @@ def create_report(model, test_gen, filename):
     '''
 
     # predict test data using model
-    pred = model.predict_generator(test_gen)
+    pred = model.predict(test_gen)
     predicted_classes = np.argmax(pred,axis=1)
 
     # reset test generator to start from first batch (to match outputs to predicted data)
@@ -145,62 +143,96 @@ def create_report(model, test_gen, filename):
                 file.write(report)
 
 
-def run_model_balanced(train_gen, val_gen, test_gen, epochs, filename):
+def run_model_balanced(train_gen, val_gen, test_gen, num_epochs, filename):
+    ''' 
+    Fits a model using training and validation data and predicts on test data.
+    Uses class weights to account for unequal number of samples in training data.
+    Saves a plot of model fitting history and a classification report.
+
+    Arguments:
+        - train_gen: Keras ImageIterator with batches of train data
+        - val_gen: Keras ImageIterator with batches of validation data
+        - test_gen: Keras ImageIterator with batches of test data
+        - num_epochs: Number of epochs to fit the model for
+        - filename: prefix to where the plot and classification report files should be named
     
+    Returns:
+        None
+
+    '''
+    # compile model
     model = build_model()
 
+    # create class weights based on number of each class
     class_weights = create_class_weights(train_gen)
 
-    model.fit_generator(generator=train_gen, # fit model with generators
-                        steps_per_epoch=128,
-                        validation_data=val_gen,
-                        validation_steps=128,
-                        epochs=epochs, 
-                        class_weight = class_weights)
-    
-    create_report(model, test_gen, filename)
-
-def run_model_imbalanced(train_gen, val_gen, test_gen, epochs, filename):
-    
-    model = build_model()
-
-    H = model.fit_generator(generator=train_gen, # fit model with generators
-                        steps_per_epoch=128,
-                        validation_data=val_gen,
-                        validation_steps=128,
-                        epochs=epochs)
+    # fit model with generators
+    H = model.fit(train_gen,
+                    steps_per_epoch=len(train_gen), # number of batches in train data
+                    validation_data=val_gen,
+                    validation_steps=len(val_gen), # number of batches in val data 
+                    class_weight = class_weights,
+                    epochs=num_epochs)
     
     from utils import save_plot_history
-    save_plot_history(H, epochs, filename)
-    
+
+    # save history plot
+    save_plot_history(H, num_epochs, filename)
+
+    # save classification report
     create_report(model, test_gen, filename)
 
-def mainlol():
+def run_model_imbalanced(train_gen, val_gen, test_gen, num_epochs, filename):
+    ''' 
+    Fits a model using training and validation data and predicts on test data.
+    Does not account for unequal number of samples in each class.
+    Saves a plot of model fitting history and a classification report.
 
-    args = argument_parser()
+    Arguments:
+        - train_gen: Keras ImageIterator with batches of train data
+        - val_gen: Keras ImageIterator with batches of validation data
+        - test_gen: Keras ImageIterator with batches of test data
+        - num_epochs: Number of epochs to fit the model for
+        - filename: prefix to where the plot and classification report files should be named
+    
+    Returns:
+        None
 
-    if args['balanced'] == True:
-        run_model_balanced(dt.train_gen_none, dt.val_gen_none, dt.test_gen_none, args['epochs'], 'balanced/no_aug')
-        run_model_balanced(dt.train_gen_low, dt.val_gen_low, dt.test_gen_low, args['epochs'], 'balanced/low_aug')
-        run_model_balanced(dt.train_gen_high, dt.val_gen_high, dt.test_gen_high, args['epochs'], 'balanced/high_aug')
+    '''    
+    # compile model
+    model = build_model()
 
-    if args['balanced'] == False:
-        run_model_imbalanced(dt.train_gen_none, dt.val_gen_none, dt.test_gen_none, args['epochs'], 'imbalanced/no_aug')
-        run_model_imbalanced(dt.train_gen_low, dt.val_gen_low, dt.test_gen_low, args['epochs'], 'imbalanced/low_aug')
-        run_model_imbalanced(dt.train_gen_high, dt.val_gen_high, dt.test_gen_high, args['epochs'], 'imbalanced/high_aug')
+    # fit model with generators
+    H = model.fit(train_gen, 
+                        steps_per_epoch=len(train_gen), # number of batches in train data
+                        validation_data=val_gen,
+                        validation_steps=len(val_gen), # number of batches in validation data
+                        epochs=num_epochs)
+    
+    from utils import save_plot_history
+
+    # save history plot
+    save_plot_history(H, num_epochs, filename)
+    
+    # save classification report
+    create_report(model, test_gen, filename)
+
 
 def main():
     
+    # parse arguments
     args = argument_parser()
 
-    # ellers kunne man også bare importere funktionen stadig, men definere de forskellige variabler? ved ikke om det er bedre..  
     from data import prep_data
+
+    # create data based on chosen level of data augmentation
     train_gen, val_gen, test_gen = prep_data(args['augmentation_level'])
 
-    if args['balanced'] == True:
+    # whether to run the model with balance or imbalanced data
+    if args['balance'] == 'balanced':
         run_model_balanced(train_gen, val_gen, test_gen, args['epochs'], f"balanced/{args['augmentation_level']}")
 
-    if args['balanced'] == False:
+    elif args['balance'] == 'imbalanced':
         run_model_imbalanced(train_gen, val_gen, test_gen, args['epochs'], f"imbalanced/{args['augmentation_level']}")
 
 if __name__ == '__main__':
