@@ -27,13 +27,12 @@ from tensorflow.keras.optimizers import SGD
 from sklearn.metrics import classification_report
 from sklearn.utils import class_weight
 
-import data as dt
 
 def argument_parser():
     parser = argparse.ArgumentParser()
-    parser.add_argument("--epochs", type=int, help = "how many epochs the model should run for")
-    parser.add_argument("--balance", help = "whether to balance the unequal number of samples in each class or not")
-    parser.add_argument("--augmentation_level", help = "must be none, low or high")
+    parser.add_argument("--epochs", type=int, help = "How many epochs the model should run for", default = 10)
+    parser.add_argument("--balance", help = "whether to balance the unequal number of samples in each class or not", default = 'imbalanced')
+    parser.add_argument("--augmentation_level", help = "Level of augmentation to apply to the data. Must be none, low or high", default = 'none')
     args = vars(parser.parse_args())
     
     return args

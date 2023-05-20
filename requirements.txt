@@ -2,5 +2,6 @@ pandas
 matplotlib
 scikit-learn
 tensorflow-cpu
-opencv-python
+#opencv-python
+opencv-python-headless
 numpy

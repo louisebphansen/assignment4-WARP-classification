@@ -1,3 +1,14 @@
+'''
+VISUAL ANALYTICS @ AARHUS UNIVERSITY, FINAL PROJECT: Waste classification using CNN's
+
+AUTHOR: Louise Brix Pilegaard Hansen
+
+DESCRIPTION:
+
+
+'''
+
+
 import os
 import pandas as pd
 import argparse
