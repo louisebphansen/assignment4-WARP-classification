@@ -134,6 +134,7 @@ python3 src/classify.py --epochs <epochs> --balance <balance> --augmentation_lev
 ```
 
 **Arguments:**
+
 - **epochs:** number of epochs to run the model for. Default: 10
 - **balance**: whether to balance the data by using weighted classes or run the model the original data. Must be either 'balanced' for using balanced data or 'imbalanced' to use imbalanced data. Default: 'imbalanced'
 - **augmentation_level**: Level of augmentation to apply to the data. Must be 'none', 'low', or 'high'. Default: 'none'
@@ -185,7 +186,14 @@ For a better overview, the classification reports for the imbalanced and balance
 
 
 Looking at the history plots, it is clear that the imbalance in the data makes a huge impact on the model. When balancing the data, the curves in the history plots follow each other nicely, i.e., training and validation loss decreases somewhat similarly, and training and validation accuracy increases similarly. For the imbalanced data, on the other hand, the plots do not show a natural curve, but rather.... this could show some signs of ....
-When inspecting the impact difference levels of data augmentation has on the balanced dataset, the 'no augmentation' and 'low augmentation' both yield nice looking history plots. The 'high' augmentation balanced model, on the other hand, is showing some signs of **overfitting??**.
+When inspecting the impact difference levels of data augmentation has on the balanced dataset, the 'no augmentation' and 'low augmentation' both yield nice looking history plots. The 'high' augmentation balanced model, on the other hand, is showing some signs of **overfitting??**. The loss curve is not decreasing a lot, **which**..The validation accuracy curve is not as high as the training, which could indicate that the model does not generalize very well to new data.
 
-The same tendency is showing in the classification reports. The 
+The same tendency is showing in the classification reports. All three imbalanced models actually show a fair perfomance when looking only at accuracy and weighted average F1 scores. However, when looking closely at seperatly, it becomes clear that the models are very bad. They are only performing well on the 'plastic' class. This makes sense, as it is the class with the most samples, and it becomes evident that the model does not learn very much during training from the classes with the few samples. Out of the three models using imbalanced data, the low augmentation performs the best. 
+
+Even though the balanced models have a lower overall accuracy, the F1 scores are distributed more equally, yielding a higher macro average for all the models. The more 'distributed accuracy' comes at the cost of the performance of the 'plastic' class, which has decreased somewhat compared to the imbalanced models. When looking at augmentation levels, the high augmentation gives worse performance compared to no or low augmentation. This could indicate that using too much augmentation adds non-significant noise to the data, which does not improve the model's performance. There is not a very big difference between the no augmentation model and the low augmentation model, which again could indicate that for this scenario, using data augmentation does not help with performance.
+Although the balanced models are arguably better than the imbalanced ones, they are still not very good. Their performance would not suffice in a real-world scenario. Balancing the data does improve the performance for some of the smaller classes, but the most beneficial solution to the problem would be to gather more data. 
+
+
+
+
 
