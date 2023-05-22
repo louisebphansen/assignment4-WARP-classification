@@ -34,7 +34,7 @@ The WaRP data was found on Kaggle (https://www.kaggle.com/datasets/parohod/warp-
 
 Below is an example of the four different classes of waste used for this project.
 
-![image](https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/c33e8192-9dfe-42bf-bad3-94e1355be746)
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/c33e8192-9dfe-42bf-bad3-94e1355be746" width="600">
 
 #### Data overview
 
@@ -61,19 +61,19 @@ The code uses Kera's ImageDataGenerators to generate batches of data to feed the
 
 ##### No augmentation
 
-![image](https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/a29c61f7-cd7e-4ed9-836d-0ae1e6d84c21)
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/a29c61f7-cd7e-4ed9-836d-0ae1e6d84c21" width="650">
 
 When not applying any augmentation, the image is only preprocessed by converting the pixels from RGB (*red-green-blue*) to BGR and zero-centering color channels. 
 
 ##### Low augmentation
 
-![image](https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/991605f4-778a-42a2-9e19-874062c18612)
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/991605f4-778a-42a2-9e19-874062c18612" width="650">
 
 For the 'low' level of augmentation, the same preprocessing as described above is applied, and horizontal and vertical flip is set to *True*, allowing for a simple augmentation.
 
 ##### High augmentation
 
-![image](https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/f72912c4-6cb1-49aa-9a0d-adb0caa003d2)
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/f72912c4-6cb1-49aa-9a0d-adb0caa003d2" width="650">
 
 For the 'high' level of augmentation, several augmentation methods are defined. The images are preprocessed like the other levels, and horizontal and vertical flip is also set to true. Furthermore, a zoom and rotation range is defined as well as a brightness range.
 
@@ -182,16 +182,13 @@ For a better overview, the classification reports for the imbalanced and balance
 
 ##### Balanced data
 
-<img width="767" alt="Skærmbillede 2023-05-22 kl  16 43 05" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/68651d2c-fe90-4804-98f5-b9836c7d70cb">
+<img width="767" alt="Skærmbillede 2023-05-22 kl  16 43 05" src="https://github.com/louially in the classes isebphansen/assignment4-WARP-classification/assets/75262659/68651d2c-fe90-4804-98f5-b9836c7d70cb">
 
 
-Looking at the history plots, it is clear that the imbalance in the data makes a huge impact on the model. When balancing the data, the curves in the history plots follow each other nicely, i.e., training and validation loss decreases somewhat similarly, and training and validation accuracy increases similarly. For the imbalanced data, on the other hand, the plots do not show a natural curve, but rather.... this could show some signs of ....
-When inspecting the impact difference levels of data augmentation has on the balanced dataset, the 'no augmentation' and 'low augmentation' both yield nice looking history plots. The 'high' augmentation balanced model, on the other hand, is showing some signs of **overfitting??**. The loss curve is not decreasing a lot, **which**..The validation accuracy curve is not as high as the training, which could indicate that the model does not generalize very well to new data.
+Looking at the history plots, it is clear that whether the data is balanced or not makes a difference. When balancing the data, the curves in the history plots follow each other more nicely, i.e., training and validation loss decreases somewhat similarly, and training and validation accuracy increases similarly. For the imbalanced data, the accuracy curves especially could indicate that the model does not generalize very well, as the validation accuracy is not improving along the training accuracy. Even though the accuracy is at a high level (around 80%), it could be a sign that the model mostly have learned the most prominent class, and is only good at predicting this. This is also evident from the classification reports, where all three imbalanced models actually show a fair perfomance when looking only at accuracy and weighted average F1 scores. However, when looking closely at the classes seperatly, it becomes clear that the models are very bad, as they are only performing well on the 'plastic' class. It is likely that the history plots and classification reports yield strange results due to the high imbalanced of number of samples in the data.
 
-The same tendency is showing in the classification reports. All three imbalanced models actually show a fair perfomance when looking only at accuracy and weighted average F1 scores. However, when looking closely at seperatly, it becomes clear that the models are very bad. They are only performing well on the 'plastic' class. This makes sense, as it is the class with the most samples, and it becomes evident that the model does not learn very much during training from the classes with the few samples. Out of the three models using imbalanced data, the low augmentation performs the best. 
 
-Even though the balanced models have a lower overall accuracy, the F1 scores are distributed more equally, yielding a higher macro average for all the models. The more 'distributed accuracy' comes at the cost of the performance of the 'plastic' class, which has decreased somewhat compared to the imbalanced models. When looking at augmentation levels, the high augmentation gives worse performance compared to no or low augmentation. This could indicate that using too much augmentation adds non-significant noise to the data, which does not improve the model's performance. There is not a very big difference between the no augmentation model and the low augmentation model, which again could indicate that for this scenario, using data augmentation does not help with performance.
-Although the balanced models are arguably better than the imbalanced ones, they are still not very good. Their performance would not suffice in a real-world scenario. Balancing the data does improve the performance for some of the smaller classes, but the most beneficial solution to the problem would be to gather more data. 
+When inspecting the impact different levels of data augmentation has on the balanced dataset, the 'no augmentation' and 'low augmentation' both yield nice looking history plots. The 'high' augmentation balanced model, on the other hand, has lower levels of validation accuracy and higher levels of loss, which indicates that the model does not generalize very well to new data. The classification reports for the balanced models show that even though the balanced models have a lower overall accuracy, the F1 scores are distributed more equally, yielding a higher macro average for all the models. The more 'distributed accuracy' comes at the cost of the performance of the 'plastic' class, however, which has decreased somewhat compared to the imbalanced models. When looking at augmentation levels, the high augmentation gives worse performance compared to no or low augmentation. This could indicate that using too much augmentation adds non-significant noise to the data, which does not improve the model's performance. There is not a very big difference between the no augmentation model and the low augmentation model, which again could indicate that for this scenario, using data augmentation does not help with performance. Although the balanced models are arguably better than the imbalanced ones, they are still not very good. Their performance would not suffice in a real-world scenario. The best solution to this problem would be to gather more data for the classes with few samples.
 
 
 
