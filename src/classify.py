@@ -150,7 +150,7 @@ def create_report(model, test_gen, filename):
                             predicted_classes, target_names = labels)
     
     # save report
-    out_path = os.path.join("out", f"{filename}_TEST_classification_report.txt")
+    out_path = os.path.join("out", f"{filename}_classification_report.txt")
 
     with open(out_path, 'w') as file:
                 file.write(report)

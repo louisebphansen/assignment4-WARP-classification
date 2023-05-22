@@ -53,7 +53,7 @@ def save_plot_history(H, epochs, name):
     plt.ylabel("Accuracy")
     plt.tight_layout()
     plt.legend()
-    plt.savefig(os.path.join("out", f"{name}_TEST_history_plot.png"))
+    plt.savefig(os.path.join("out", f"{name}_history_plot.png"))
 
 def plot_augmentation(datagenerator, image_i, name):
   '''
