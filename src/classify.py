@@ -1,25 +1,34 @@
+'''
+VISUAL ANALYTICS @ AARHUS UNIVERSITY, FINAL PROJECT: Waste classification using CNN's
+
+AUTHOR: Louise Brix Pilegaard Hansen
+
+DESCRIPTION:
+The script trains a classifier on batches of data from an altered version of the WaRP dataset, classifying four different types of waste. 
+When running the script, it is possible to specify whether to balance the unequal number of samples, and what level of augmentation to apply to the data.
+The script saves a classification report and a history plot in the 'out' folder, as well as examples of augmented images.
+
+'''
+
+# generic tools
 import os
 import argparse
 import numpy as np
 
 # tf tools
 import tensorflow as tf
-
-# image processsing
 from tensorflow.keras.preprocessing.image import (ImageDataGenerator)
 
-# VGG16 model
+# tf model tools
 from tensorflow.keras.applications.vgg16 import (preprocess_input, VGG16)
 
-# layers
 from tensorflow.keras.layers import (Flatten, 
                                      Dense, 
                                      Dropout, 
                                      BatchNormalization)
-# generic model object
+
 from tensorflow.keras.models import Model
 
-# optimizers
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 from tensorflow.keras.optimizers import SGD
 
@@ -27,11 +36,11 @@ from tensorflow.keras.optimizers import SGD
 from sklearn.metrics import classification_report
 from sklearn.utils import class_weight
 
-
+# define arguments that can be defined by the user from command line
 def argument_parser():
     parser = argparse.ArgumentParser()
     parser.add_argument("--epochs", type=int, help = "How many epochs the model should run for", default = 10)
-    parser.add_argument("--balance", help = "whether to balance the unequal number of samples in each class or not", default = 'imbalanced')
+    parser.add_argument("--balance", help = "Whether to balance the unequal number of samples in each class or not", default = 'imbalanced')
     parser.add_argument("--augmentation_level", help = "Level of augmentation to apply to the data. Must be none, low or high", default = 'none')
     args = vars(parser.parse_args())
     
@@ -73,7 +82,7 @@ def build_model():
 
     # compile
     lr_schedule = tf.keras.optimizers.schedules.ExponentialDecay(
-        initial_learning_rate=0.01,
+        initial_learning_rate=0.001,
         decay_steps=10000,
         decay_rate=0.9)
 
@@ -90,10 +99,15 @@ def create_class_weights(traingenerator):
     Create class weights based on number of samples in each class.
 
     Arguments:
-        - traingenerator: ImageDataGenerator for training data
+        - traingenerator: Keras DirectoryIterator with training data
 
     Returns:
         - a dictionary of class weights for each of the classes
+
+    Sources:
+        Code to compute class weights was found here:
+        https://stackoverflow.com/questions/69783897/compute-class-weight-function-issue-in-sklearn-library-when-used-in-keras-cl 
+
     '''
 
     # compute class weights based on number of samples in each class
@@ -101,7 +115,7 @@ def create_class_weights(traingenerator):
                                                  classes = np.unique(traingenerator.classes),
                                                  y = traingenerator.classes)
 
-    # convert to a dictionary suitable for using in a fit_generator pipeline
+    # convert to a dictionary suitable for using in a model.fit pipeline
     class_weights = dict(zip(np.unique(traingenerator.classes), class_weights))
 
     return class_weights
@@ -112,8 +126,8 @@ def create_report(model, test_gen, filename):
     
     Arguments:
     - Model: a trained model
-    - test_gen: Keras ImageDataGenerator with test data (i.e., shuffle must be False)
-    - filename: prefix of the classification report
+    - test_gen: Keras DirectoryIterator with test data
+    - filename: what to call the prefix of the classification report
 
     Returns:
         None
@@ -136,7 +150,7 @@ def create_report(model, test_gen, filename):
                             predicted_classes, target_names = labels)
     
     # save report
-    out_path = os.path.join("out", f"{filename}_classification_report.txt")
+    out_path = os.path.join("out", f"{filename}_TEST_classification_report.txt")
 
     with open(out_path, 'w') as file:
                 file.write(report)
@@ -149,11 +163,11 @@ def run_model_balanced(train_gen, val_gen, test_gen, num_epochs, filename):
     Saves a plot of model fitting history and a classification report.
 
     Arguments:
-        - train_gen: Keras ImageIterator with batches of train data
-        - val_gen: Keras ImageIterator with batches of validation data
-        - test_gen: Keras ImageIterator with batches of test data
+        - train_gen: Keras DirectoryIterator with batches of train data
+        - val_gen: Keras DirectoryIterator with batches of validation data
+        - test_gen: Keras DirectoryIterator with batches of test data
         - num_epochs: Number of epochs to fit the model for
-        - filename: prefix to where the plot and classification report files should be named
+        - filename: prefix to what the plot and classification report files should be named
     
     Returns:
         None
@@ -162,10 +176,10 @@ def run_model_balanced(train_gen, val_gen, test_gen, num_epochs, filename):
     # compile model
     model = build_model()
 
-    # create class weights based on number of each class
+    # create class weights based on number of samples in each class
     class_weights = create_class_weights(train_gen)
 
-    # fit model with generators
+    # fit model with generators and set class weights
     H = model.fit(train_gen,
                     steps_per_epoch=len(train_gen), # number of batches in train data
                     validation_data=val_gen,
@@ -188,9 +202,9 @@ def run_model_imbalanced(train_gen, val_gen, test_gen, num_epochs, filename):
     Saves a plot of model fitting history and a classification report.
 
     Arguments:
-        - train_gen: Keras ImageIterator with batches of train data
-        - val_gen: Keras ImageIterator with batches of validation data
-        - test_gen: Keras ImageIterator with batches of test data
+        - train_gen: Keras DirectoryIterator with batches of train data
+        - val_gen: Keras DirectoryIterator with batches of validation data
+        - test_gen: Keras DirectoryIterator with batches of test data
         - num_epochs: Number of epochs to fit the model for
         - filename: prefix to where the plot and classification report files should be named
     
@@ -201,7 +215,7 @@ def run_model_imbalanced(train_gen, val_gen, test_gen, num_epochs, filename):
     # compile model
     model = build_model()
 
-    # fit model with generators
+    # fit model with generators and no class weights
     H = model.fit(train_gen, 
                         steps_per_epoch=len(train_gen), # number of batches in train data
                         validation_data=val_gen,
@@ -222,12 +236,13 @@ def main():
     # parse arguments
     args = argument_parser()
 
+    # import functions from data script which prepares the data
     from data import prep_data
 
-    # create data based on chosen level of data augmentation
+    # create batches of data based on chosen level of data augmentation
     train_gen, val_gen, test_gen = prep_data(args['augmentation_level'])
 
-    # whether to run the model with balance or imbalanced data
+    # run the model with balanced or imbalanced data
     if args['balance'] == 'balanced':
         run_model_balanced(train_gen, val_gen, test_gen, args['epochs'], f"balanced/{args['augmentation_level']}")
 

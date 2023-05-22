@@ -4,11 +4,12 @@ VISUAL ANALYTICS @ AARHUS UNIVERSITY, FINAL PROJECT: Waste classification using 
 AUTHOR: Louise Brix Pilegaard Hansen
 
 DESCRIPTION:
-
+The script contains code to generate batches of data using Keras DirectoryIterators on the WaRP dataset.
+Different levels of data augmentation, i.e., none, low or high, is defined and can be applied.
 
 '''
 
-
+# generic tools
 import os
 import pandas as pd
 import argparse
@@ -16,14 +17,11 @@ import numpy as np
 
 # tf tools
 import tensorflow as tf
-
-from utils import plot_augmentation
-# layers
-# image processsing
 from tensorflow.keras.preprocessing.image import (ImageDataGenerator)
-
-# VGG16 model
 from tensorflow.keras.applications.vgg16 import (preprocess_input)
+
+# from own utils script
+from utils import plot_augmentation
 
 def define_generators(subset, augmentation_level):
     '''
@@ -31,7 +29,7 @@ def define_generators(subset, augmentation_level):
     Saves a plot in the 'out' folder with example of applying augmentation and the original image
 
     Arguments:
-        - subset: what subset of the data to use. Either "train" or "test"
+        - subset: what subset of the data to create generator for. Either "train" or "test"
         - augmentation_level: level of augmentation. Either "none", "low" or "high"
         
     Returns:
@@ -49,7 +47,7 @@ def define_generators(subset, augmentation_level):
             preprocessing_function = preprocess_input,
             validation_split = 0.2) # split training data to 80% train, 20% val
 
-        # plot example of the augmentation using the first image in the "train/cardboard" folder
+        # save plot of example of the augmentation using the first image in the "train/cardboard" folder
         plot_augmentation(datagenerator, 0, 'no_aug')
     
     # define train generator with low augmentation
@@ -82,14 +80,14 @@ def define_generators(subset, augmentation_level):
 
 def create_flow(datagenerator, subset):
     '''
-    Creates batches of data from the 'Warp-C' directory using Kera's 'flow_from_directory'.
+    Creates batches of data from the 'Warp-C' directory using Keras 'flow_from_directory'.
 
     Arguments:
-        - datagenerator: A Keras imagedatagenerator 
+        - datagenerator: A Keras ImageDataGenerator 
         - subset: subset of the data, can be 'train', 'val' or 'test' 
 
     Returns:
-        - A Keras DataIterator that can be used for fitting a model
+        - A Keras DirectoryIterator that can be used for fitting a model
     '''
 
     if subset == 'train':
@@ -132,14 +130,21 @@ def prep_data(augmentation_level):
         - augmentation_level: level of data augmentation. Must be 'none', 'low' or 'high'.
 
     Returns:
-        - Keras DataIterators for train, validation and test data
+        - Keras DirectoryIterator for train, validation and test data
     '''
 
+    # create test, validation and train datagenerators
     test_image_gen = define_generators('test', 'none')
+
+    # validation data is not augmented, like test data
+    val_image_gen = define_generators('train', 'none')
+
+    # define augmentation based on chosen level
     train_image_gen = define_generators('train', augmentation_level)
 
+    # create DirectoryIterators for the three subsets
     test_gen = create_flow(test_image_gen, 'test')
     train_gen = create_flow(train_image_gen, 'train')
-    val_gen = create_flow(train_image_gen, 'val')
+    val_gen = create_flow(val_image_gen, 'val')
 
     return train_gen, val_gen, test_gen
