@@ -182,7 +182,7 @@ For a better overview, the classification reports for the imbalanced and balance
 
 ##### Balanced data
 
-<img width="767" alt="Skærmbillede 2023-05-22 kl  16 43 05" src="https://github.com/louially in the classes isebphansen/assignment4-WARP-classification/assets/75262659/68651d2c-fe90-4804-98f5-b9836c7d70cb">
+<img width="767" alt="Skærmbillede 2023-05-22 kl  16 43 05" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/68651d2c-fe90-4804-98f5-b9836c7d70cb">
 
 
 Looking at the history plots, it is clear that whether the data is balanced or not makes a difference. When balancing the data, the curves in the history plots follow each other more nicely, i.e., training and validation loss decreases somewhat similarly, and training and validation accuracy increases similarly. For the imbalanced data, the accuracy curves especially could indicate that the model does not generalize very well, as the validation accuracy is not improving along the training accuracy. Even though the accuracy is at a high level (around 80%), it could be a sign that the model mostly have learned the most prominent class, and is only good at predicting this. This is also evident from the classification reports, where all three imbalanced models actually show a fair perfomance when looking only at accuracy and weighted average F1 scores. However, when looking closely at the classes seperatly, it becomes clear that the models are very bad, as they are only performing well on the 'plastic' class. It is likely that the history plots and classification reports yield strange results due to the high imbalanced of number of samples in the data.
