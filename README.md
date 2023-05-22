@@ -49,7 +49,7 @@ Below is an example of the four different classes of waste used for this project
 |Test|Metal| 98 |
 |Test|Plastic| 1175 |
 
-As seen from the above table, there is a notable difference in the amount of samples in each of the categories. This could have a big influence on training the model, as it would be prone to overfit on the classes with more samples. To account and test for the effect of this imbalance, the model can be run in a script that balances the data (by calculating class weights, thereby letting the prominent classes weigh less in the model) and one that does not. See **Usage** and **Results** for more on this issue.
+As seen from the above table, there is a notable difference in the amount of samples in each of the categories. This could have a big influence on training the model, as it would be prone to overfit on the classes with more samples and not learn very much about the classes with few samples. To account and test for the effect of this imbalance, the model can be run in a script that balances the data (by calculating class weights, thereby letting the prominent classes weigh less in the model) and one that does not. See **Usage** and **Results** for more on this issue.
 
 ### Methods
 
@@ -80,7 +80,7 @@ For the 'high' level of augmentation, several augmentation methods are defined. 
 
 #### Classification
 
-A classifier is trained on the train, validation and test generators. The classifier uses a pretrained model, VGG16, without its classification layers. Instead, two new classification layers are added, of size 256 and 128. The model uses ReLU as its activation function, stochasitc gradient descent as the optimizer, and categorical crossentropy as the loss function. The output layer consists of the four classes representing the four different types of waste.
+A convolutional neural network (CNN) classifier is trained on the train, validation and test generators. The classifier uses a pretrained CNN, VGG16, without its classification layers. Instead, two new classification layers are added, of size 256 and 128. The model uses ReLU as its activation function, stochastic gradient descent as the optimizer, and categorical crossentropy as the loss function. The output layer consists of the four classes representing the four different types of waste.
 
 
 ### Usage
@@ -99,7 +99,7 @@ The data is not attached to this repository because of its size. Instead, downlo
 
 Unzip the file, which will be called 'archive'. Inside the unzipped archive folder, you will find several subfolders. Choose the one called 'Warp-C' and place it in the ```assignment4-WARP-classification``` folder (i.e., the main folder/repository). 
 
-In order to create the desired four classes as explained above, the folders needs to be merged into new classes. To do so, run the ```move_files.sh``` script from the terminal. 
+In order to create the desired four classes as explained above, the folders needs to be merged into new classes. To do so, run the ```move_files.sh``` script from the terminal by typing ```bash move_files.sh```. 
 
 This will create two new folders called ```train``` and ```test``` inside the ```Warp-C``` folder, which each contains the subfolders (i.e., the four new classes), ```cardboard```, ```glass```, ```metal``` and ```plastic``` with the images from the old subfolders as described in the data section. This is the data that will be used for training the classifier. 
 
@@ -139,3 +139,53 @@ python3 src/classify.py --epochs <epochs> --balance <balance> --augmentation_lev
 - **augmentation_level**: Level of augmentation to apply to the data. Must be 'none', 'low', or 'high'. Default: 'none'
 
 ### Results
+
+#### History plots
+
+
+**Balanced data, no augmentation**
+
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/195cf649-5107-4ed0-9c92-093b21256a9d" width="500">
+
+
+**Balanced data, low augmentation**
+
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/bb011cb5-7dd1-4c55-8489-46e4aceb4042" width="500">
+
+
+**Balanced data, high augmentation**
+
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/dbff8f4c-0bd0-4a50-8579-7c8c9663e5f7" width="500">
+
+
+**Imbalanced data, no augmentation**
+
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/62f46199-a6cf-42bf-96cd-bb79939f3310" width="500">
+
+
+**Imbalanced data, low augmentation**
+
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/1301d68b-697f-46f2-9c2a-b208ce3ef488" width="500">
+
+**Imbalanced data, high augmentation**
+
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/0ce942fa-e148-4cbb-a369-f07f9a5c9f55" width="500">
+
+#### Classification reports
+
+For a better overview, the classification reports for the imbalanced and balanced results have been gathered in a table. To see each classification report seperately, go to the ```out``` folder.
+
+##### Imbalanced data
+
+<img width="767" alt="Skærmbillede 2023-05-22 kl  16 33 58" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/87e66e8b-880a-44de-a142-52cb13be2a3c">
+
+##### Balanced data
+
+<img width="767" alt="Skærmbillede 2023-05-22 kl  16 43 05" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/68651d2c-fe90-4804-98f5-b9836c7d70cb">
+
+
+Looking at the history plots, it is clear that the imbalance in the data makes a huge impact on the model. When balancing the data, the curves in the history plots follow each other nicely, i.e., training and validation loss decreases somewhat similarly, and training and validation accuracy increases similarly. For the imbalanced data, on the other hand, the plots do not show a natural curve, but rather.... this could show some signs of ....
+When inspecting the impact difference levels of data augmentation has on the balanced dataset, the 'no augmentation' and 'low augmentation' both yield nice looking history plots. The 'high' augmentation balanced model, on the other hand, is showing some signs of **overfitting??**.
+
+The same tendency is showing in the classification reports. The 
+
