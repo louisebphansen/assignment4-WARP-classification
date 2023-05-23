@@ -8,6 +8,7 @@ This script contains plotting functions which are used in the other two scripts.
 
 '''
 
+# import packages
 import matplotlib.pyplot as plt
 import matplotlib.image as mpimg
 import numpy as np

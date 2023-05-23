@@ -5,7 +5,7 @@ AUTHOR: Louise Brix Pilegaard Hansen
 
 DESCRIPTION:
 The script contains code to generate batches of data using Keras DirectoryIterators on the WaRP dataset.
-Different levels of data augmentation, i.e., none, low or high, is defined and can be applied.
+Different levels of data augmentation, none, low or high, are defined and can be applied.
 
 '''
 
