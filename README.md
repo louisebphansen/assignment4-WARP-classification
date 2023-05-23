@@ -101,7 +101,7 @@ Unzip the file, which will be called 'archive'. Inside the unzipped archive fold
 
 In order to create the desired four classes as explained in the **Data** section, the folders needs to be merged into new classes. To do so, run the ```move_files.sh``` script from the terminal by typing ```bash move_files.sh```. 
 
-This will create two new folders called ```train``` and ```test``` inside the ```Warp-C``` folder, which each contains the subfolders (i.e., the four new classes), ```cardboard```, ```glass```, ```metal``` and ```plastic``` with the images from the old subfolders as described in the data section. This is the data that will be used for training the classifier. 
+This will create two new folders called ```train``` and ```test``` inside the ```Warp-C``` folder, which each contains the subfolders (i.e., the four new classes), ```cardboard```, ```glass```, ```metal``` and ```plastic``` with the images from the old subfolders as described in the data section. This is the data that will be used for training the classifier. As there are many files to move, it may take some minutes to run the script.
 
 Your repository should now look like this:
 
