@@ -7,7 +7,7 @@ This assignment is the final project on the Visual Analytics course on the elect
 The code was created by me. However, code provided throughout the course has been reused and adapted for this project. 
 
 ### Project description
-This project aims to apply the tools and methods acquired in the Visual Analytics course to create a classifier which can distinguish between four different types of waste. The repository contains code to run a classifier using different levels and methods of augmentation as well as balanced vs imbalanced data. The motivation behind the project was due to an interest in applying image classification and computer vision to a real life problem such as waste recyling.
+This project aims to apply the tools and methods acquired in the Visual Analytics course to create a classifier which can distinguish between four different types of waste. The repository contains code to run a classifier using different levels and methods of augmentation as well as balanced vs imbalanced data. The motivation behind the project was due to an interest in applying image classification and computer vision to a real life problem such as waste recycling.
 
 ### Contents of the repository
 | Folder/File  | Contents| Description |
