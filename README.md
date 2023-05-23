@@ -34,7 +34,7 @@ The WaRP data was found on Kaggle (https://www.kaggle.com/datasets/parohod/warp-
 
 Below is an example of the four different classes of waste used for this project.
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/c33e8192-9dfe-42bf-bad3-94e1355be746" width="600">
+<img width="600" alt="Skærmbillede 2023-05-17 kl  10 30 53" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/d3d30407-4840-44d3-a3dc-d793501d7886">
 
 #### Data overview
 
@@ -61,19 +61,19 @@ The code uses Kera's ImageDataGenerators to generate batches of data to feed the
 
 ##### No augmentation
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/a29c61f7-cd7e-4ed9-836d-0ae1e6d84c21" width="650">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/42d90dea-d89f-47ab-9c83-a005401d0e01" width="650">
 
 When not applying any augmentation, the image is only preprocessed by converting the pixels from RGB (*red-green-blue*) to BGR and zero-centering color channels. 
 
 ##### Low augmentation
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/991605f4-778a-42a2-9e19-874062c18612" width="650">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/f0be8e47-aa2f-422a-a8c2-e2a442e19aa0" width="650">
 
 For the 'low' level of augmentation, the same preprocessing as described above is applied, and horizontal and vertical flip is set to *True*, allowing for a simple augmentation.
 
 ##### High augmentation
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/f72912c4-6cb1-49aa-9a0d-adb0caa003d2" width="650">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/19debfe7-e778-47c7-8f59-bad8276be4c5" width="650">
 
 For the 'high' level of augmentation, several augmentation methods are defined. The images are preprocessed like the other levels, and horizontal and vertical flip is also set to true. Furthermore, a zoom and rotation range is defined as well as a brightness range.
 
@@ -105,8 +105,8 @@ This will create two new folders called ```train``` and ```test``` inside the ``
 
 Your repository should now look like this:
 
-![image](https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/4cb445f8-14f3-48aa-9bb2-ef843caba106)
-
+![Skærmbillede 2023-05-23 kl  17 06 45](https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/e83214d3-8324-4b5a-a011-e7ad11fb68de)
+ 
 #### Setup
 First, ensure that you have installed the *venv* package for Python (if not, run ```sudo apt-get update``` and ```sudo apt-get install python3-venv```). 
 
@@ -146,31 +146,33 @@ python3 src/classify.py --epochs <epochs> --balance <balance> --augmentation_lev
 
 **Balanced data, no augmentation**
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/195cf649-5107-4ed0-9c92-093b21256a9d" width="500">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/0a93f0b5-f528-4b8c-8898-4d59727d9a13" width="500">
 
 
 **Balanced data, low augmentation**
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/bb011cb5-7dd1-4c55-8489-46e4aceb4042" width="500">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/be6cf22c-7f33-4ea8-ad30-8a68bba80be8" width="500">
 
 
 **Balanced data, high augmentation**
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/dbff8f4c-0bd0-4a50-8579-7c8c9663e5f7" width="500">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/46ac65cc-93df-4083-8c45-10077baf7933" width="500">
 
 
 **Imbalanced data, no augmentation**
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/62f46199-a6cf-42bf-96cd-bb79939f3310" width="500">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/8cb81e5d-2969-4493-bbde-66e2da8bab28" width="500">
 
 
 **Imbalanced data, low augmentation**
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/1301d68b-697f-46f2-9c2a-b208ce3ef488" width="500">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/d7287803-ba73-43a9-8a0d-ebf1e7ed4c8a" width="500">
+
 
 **Imbalanced data, high augmentation**
 
-<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/0ce942fa-e148-4cbb-a369-f07f9a5c9f55" width="500">
+<img src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/2745fbb5-4460-4500-ad0d-a52b9567519f" width="500">
+
 
 #### Classification reports
 
@@ -178,12 +180,12 @@ For a better overview, the classification reports for the imbalanced and balance
 
 ##### Imbalanced data
 
-<img width="767" alt="Skærmbillede 2023-05-22 kl  16 33 58" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/87e66e8b-880a-44de-a142-52cb13be2a3c">
+<img width="768" alt="Skærmbillede 2023-05-22 kl  16 33 58" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/f66b1610-ec09-41dc-8cc2-dc482449aab5">
+
 
 ##### Balanced data
 
-<img width="767" alt="Skærmbillede 2023-05-22 kl  16 43 05" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/68651d2c-fe90-4804-98f5-b9836c7d70cb">
-
+<img width="768" alt="Skærmbillede 2023-05-22 kl  16 43 05" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/28361cd6-669b-44cd-9fd0-24f384197478">
 
 
 Looking at the history plots, it is clear that whether the data is balanced or not makes a difference. When balancing the data, the curves in the history plots follow each other more nicely, i.e., training and validation loss decreases somewhat similarly, and training and validation accuracy increases similarly. For the imbalanced data however, the accuracy curves especially could indicate that the model does not generalize very well, as the validation accuracy is not improving along the training accuracy. The plots do not show signs of any of the imbalanced models being very good. This is also evident from the classification reports, where all three imbalanced models actually show a fair perfomance when looking only at accuracy and weighted average F1 scores. However, when looking closely at the classes seperatly, it becomes clear that the models are very bad, as they are only performing well on the 'plastic' class. It is likely that the history plots and classification reports yield strange results due to the high imbalance of number of samples in the data, and that they only have learned to predict the ‘plastic’ class.
