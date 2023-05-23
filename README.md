@@ -1,12 +1,12 @@
 # Final Project: Waste Classification using CNN's
 
-This assignment is the final project on the Visual Analytics course on the elective in Cultural Data Science at Aarhus University. 
+This assignment is the final project on the Visual Analytics course on the elective in Cultural Data Science at Aarhus University, 2023. 
 
 ### Contributions
 
 The code was created by me. However, code provided throughout the course has been reused and adapted for this project. 
 
-### Repository description
+### Project description
 This project aims to apply the tools and methods acquired in the Visual Analytics course to create a classifier which can distinguish between four different types of waste. The repository contains code to run a classifier using different levels and methods of augmentation as well as balanced vs imbalanced data. The motivation behind the project was due to an interest in applying image classification and computer vision to a real life problem such as waste recyling.
 
 ### Contents of the repository
@@ -15,7 +15,7 @@ This project aims to apply the tools and methods acquired in the Visual Analytic
 | ```out```     |```balanced```, ```imbalanced```, *high_aug_augmentation_example.png*, *low_aug_augmentation_example.png*, *no_aug_augmentation_example.png*, *original_image.png*  | Contains the output of running the **classify.py** script. The main folder contains examples of augmented images at different levels as well as the original image with no augmentation or preprocessing. The two subfolders contain the history plots and classification reports for running the model with different levels of augmentation with either balanced or imbalanced data. |
 | ```src```   | **classify.py**, **data.py**, **utils.py**| Contains the Python scripts to run a classifier on the WaRP dataset. **data.py** contains code to load, prepare and augment the data (using Keras ImageDataGenerator). **classify.py** contains code to train a classifier. **utils.py** contains functions to plot model history and examples of augmented images.|
 |README.md| - | Description of the repository and how to use it. |
-|move_files.sh| - |Bash script for creating new train and test folders with subdirectories. |
+|move_files.sh| - |Bash script for creating the data for this project, i.e., new train and test folders with subdirectories. |
 |requirements.txt| - | Packages required to run the code.|
 |run.sh| - | Bash script for running the **classify.py** script, with already defined arguments.|
 |setup.sh| - |Bash script for setting up virtual environment for project|
@@ -49,7 +49,7 @@ Below is an example of the four different classes of waste used for this project
 |Test|Metal| 98 |
 |Test|Plastic| 1175 |
 
-As seen from the above table, there is a notable difference in the amount of samples in each of the categories. This could have a big influence on training the model, as it would be prone to overfit on the classes with more samples and not learn very much about the classes with few samples. To account and test for the effect of this imbalance, the model can be run in a script that balances the data (by calculating class weights, thereby letting the prominent classes weigh less in the model) and one that does not. See **Usage** and **Results** for more on this issue.
+As seen from the above table, there is a notable difference in the amount of samples in each of the classes. This could have a big influence on training the model, as it would be prone to overfit on the classes with more samples and not learn very much about the classes with few samples. To account and test for the effect of this imbalance, the model can be run in a script that balances the data (by calculating class weights, thereby letting the prominent classes weigh less in the model) and one that does not. See **Usage** and **Results** for more on this issue.
 
 ### Methods
 
@@ -80,7 +80,7 @@ For the 'high' level of augmentation, several augmentation methods are defined. 
 
 #### Classification
 
-A convolutional neural network (CNN) classifier is trained on the train, validation and test generators. The classifier uses a pretrained CNN, VGG16, without its classification layers. Instead, two new classification layers are added, of size 256 and 128. The model uses ReLU as its activation function, stochastic gradient descent as the optimizer, and categorical crossentropy as the loss function. The output layer consists of the four classes representing the four different types of waste.
+A convolutional neural network (CNN) classifier is trained on the data. The classifier uses a pretrained CNN, VGG16, without its classification layers. Instead, two new classification layers are added, of size 256 and 128. The model uses ReLU as its activation function, stochastic gradient descent as the optimizer, and categorical crossentropy as the loss function. The output layer consists of the four classes representing the four different types of waste.
 
 
 ### Usage
@@ -99,7 +99,7 @@ The data is not attached to this repository because of its size. Instead, downlo
 
 Unzip the file, which will be called 'archive'. Inside the unzipped archive folder, you will find several subfolders. Choose the one called 'Warp-C' and place it in the ```assignment4-WARP-classification``` folder (i.e., the main folder/repository). 
 
-In order to create the desired four classes as explained above, the folders needs to be merged into new classes. To do so, run the ```move_files.sh``` script from the terminal by typing ```bash move_files.sh```. 
+In order to create the desired four classes as explained in the **Data** section, the folders needs to be merged into new classes. To do so, run the ```move_files.sh``` script from the terminal by typing ```bash move_files.sh```. 
 
 This will create two new folders called ```train``` and ```test``` inside the ```Warp-C``` folder, which each contains the subfolders (i.e., the four new classes), ```cardboard```, ```glass```, ```metal``` and ```plastic``` with the images from the old subfolders as described in the data section. This is the data that will be used for training the classifier. 
 
@@ -136,7 +136,7 @@ python3 src/classify.py --epochs <epochs> --balance <balance> --augmentation_lev
 **Arguments:**
 
 - **epochs:** number of epochs to run the model for. Default: 10
-- **balance**: whether to balance the data by using weighted classes or run the model the original data. Must be either 'balanced' for using balanced data or 'imbalanced' to use imbalanced data. Default: 'imbalanced'
+- **balance**: whether to balance the data by using weighted classes or run the model with the imbalanced data. Must be either 'balanced' for using balanced data or 'imbalanced' to use imbalanced data. Default: 'imbalanced'
 - **augmentation_level**: Level of augmentation to apply to the data. Must be 'none', 'low', or 'high'. Default: 'none'
 
 ### Results
@@ -185,9 +185,10 @@ For a better overview, the classification reports for the imbalanced and balance
 <img width="767" alt="Skærmbillede 2023-05-22 kl  16 43 05" src="https://github.com/louisebphansen/assignment4-WARP-classification/assets/75262659/68651d2c-fe90-4804-98f5-b9836c7d70cb">
 
 
-Looking at the history plots, it is clear that whether the data is balanced or not makes a difference. When balancing the data, the curves in the history plots follow each other more nicely, i.e., training and validation loss decreases somewhat similarly, and training and validation accuracy increases similarly. For the imbalanced data however, the accuracy curves especially could indicate that the model does not generalize very well, as the validation accuracy is not improving along the training accuracy. It does not show signs of being any of the imbalanced models to be very good. This is also evident from the classification reports, where all three imbalanced models actually show a fair perfomance when looking only at accuracy and weighted average F1 scores. However, when looking closely at the classes seperatly, it becomes clear that the models are very bad, as they are only performing well on the 'plastic' class. It is likely that the history plots and classification reports yield strange results due to the high imbalanced of number of samples in the data, and that they only have learned to predict the ‘plastic’ class.
 
-When inspecting the impact different levels of data augmentation has on the balanced dataset, the 'no augmentation' and 'low augmentation' both yield nice looking history plots. The 'high' augmentation balanced model, on the other hand, has lower levels of validation accuracy and higher levels of loss, which indicates that the model does not generalize very well to new data. The classification reports for the balanced models show that even though the balanced models have a lower overall accuracy, the F1 scores are distributed more equally, yielding a higher macro average for all the models. The more 'distributed accuracy' comes at the cost of the performance of the 'plastic' class, however, which has decreased somewhat compared to the imbalanced models. When looking at augmentation levels, the high augmentation gives worse performance compared to no or low augmentation. This could indicate that using too much augmentation adds non-significant noise to the data, which does not improve the model's performance. There is not a very big difference between the no augmentation model and the low augmentation model, which again could indicate that for this scenario, using data augmentation does not help with performance. Although the balanced models are arguably better than the imbalanced ones, they are still not very good. Their performance would not suffice in a real-world scenario. The best solution to this problem would be to gather more data for the classes with few samples.
+Looking at the history plots, it is clear that whether the data is balanced or not makes a difference. When balancing the data, the curves in the history plots follow each other more nicely, i.e., training and validation loss decreases somewhat similarly, and training and validation accuracy increases similarly. For the imbalanced data however, the accuracy curves especially could indicate that the model does not generalize very well, as the validation accuracy is not improving along the training accuracy. The plots do not show signs of any of the imbalanced models being very good. This is also evident from the classification reports, where all three imbalanced models actually show a fair perfomance when looking only at accuracy and weighted average F1 scores. However, when looking closely at the classes seperatly, it becomes clear that the models are very bad, as they are only performing well on the 'plastic' class. It is likely that the history plots and classification reports yield strange results due to the high imbalance of number of samples in the data, and that they only have learned to predict the ‘plastic’ class.
+
+When inspecting the impact different levels of data augmentation has on the balanced dataset, the 'no augmentation' and 'low augmentation' both yield nice looking history plots. The 'high' augmentation balanced model, on the other hand, has lower levels of validation accuracy, which indicates that the model does not generalize very well to new data. The classification reports for the balanced models show that even though the balanced models have a lower overall accuracy, the F1 scores are distributed more equally, yielding a higher macro average for all the models. The more 'distributed accuracy' comes at the cost of the performance of the 'plastic' class, however, which has decreased somewhat compared to the imbalanced models. When looking at augmentation levels, the high augmentation gives worse performance compared to no or low augmentation. This could indicate that using too much augmentation adds non-significant noise to the data, which does not improve the model's performance. There is not a very big difference between the no augmentation model and the low augmentation model, which again could indicate that for this scenario, using data augmentation does not help with performance. Although the balanced models are arguably better than the imbalanced ones, they are still not very good. Their performance would not suffice in a real-world scenario. The best solution to this problem would be to gather more data for the classes with few samples.
 
 
 
